@@ -12,8 +12,8 @@ import FeaturesSection from "./components/FeaturesSection";
 import HowItWorks from "./components/HowItWorks";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
-import { API_BASE } from "/config";
 
+const API_BASE = "https://yt-downloader-api-x0yq.onrender.com";
 
 export default function Home() {
   const [url, setUrl] = useState("");

@@ -12,7 +12,7 @@ import FeaturesSection from "./components/FeaturesSection";
 import HowItWorks from "./components/HowItWorks";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
-import { API_BASE } from "./config";
+import { API_BASE } from "/config";
 
 
 export default function Home() {

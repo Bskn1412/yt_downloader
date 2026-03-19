@@ -26,14 +26,13 @@ export default function ContactSection() {
 
     try {
       await emailjs.send(
-        "service_dvrzv4z",
-        "template_5gv4cnx",
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
         {
-          user_name: name,
           user_email: email,
           message: message,
         },
-        "VT_BDyVZVqrIgVaAk"
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
       );
 
       toast.success("Message sent!");

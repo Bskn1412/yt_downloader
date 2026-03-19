@@ -12,6 +12,7 @@ import FeaturesSection from "./components/FeaturesSection";
 import HowItWorks from "./components/HowItWorks";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
+import { API_BASE } from "./config";
 
 
 export default function Home() {
@@ -27,7 +28,7 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/formats", {
+      const res = await fetch(`${API_BASE}/api/formats`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
@@ -66,7 +67,7 @@ export default function Home() {
       mergeAudio: "true",
       });
 
-      window.location.href = `/api/download?${params.toString()}`;
+      window.location.href = `${API_BASE}/api/download?${params.toString()}`;
       toast.success("Download started...");
 
     // const blob = await res.blob();

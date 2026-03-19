@@ -10,12 +10,13 @@ export async function POST(req) {
     execFile(
       ytDlpPath,
       [
-        "-J", // JSON output
+        "-J",
         "--no-playlist",
         "--no-warnings",
-        url,
+        url
       ],
       (error, stdout, stderr) => {
+
         if (error) {
           console.error(stderr);
           resolve(
@@ -28,6 +29,7 @@ export async function POST(req) {
         }
 
         let data;
+
         try {
           data = JSON.parse(stdout);
         } catch {
@@ -40,41 +42,75 @@ export async function POST(req) {
           return;
         }
 
+        const formats = data.formats || [];
+
         const video = [];
         const videoOnly = [];
         const audio = [];
 
-        for (const f of data.formats) {
+        // ------------------------
+        // First pass: classify
+        // ------------------------
+
+        for (const f of formats) {
+
+          const size = f.filesize || f.filesize_approx || 0;
+
           const obj = {
             id: f.format_id,
             ext: f.ext,
             resolution: f.height ? `${f.height}p` : null,
-            height: f.height || 0, // useful for sorting high-res first
-            fps: f.fps,
-            size: f.filesize || f.filesize_approx,
+            height: f.height || 0,
+            fps: f.fps || 0,
+            size,
             vcodec: f.vcodec,
             acodec: f.acodec,
-            abr: f.abr || null, // audio bitrate
+            abr: f.abr || null
           };
 
-          // Audio + video
           if (f.vcodec !== "none" && f.acodec !== "none") {
             video.push(obj);
           }
-          // Video only
-          else if (f.vcodec !== "none") {
+
+          else if (f.vcodec !== "none" && f.acodec === "none") {
             videoOnly.push(obj);
           }
-          // Audio only (this now includes ALL audio formats)
-          else if (f.acodec !== "none") {
+
+          else if (f.acodec !== "none" && f.vcodec === "none") {
             audio.push(obj);
           }
         }
 
-        // Sort high-to-low
-        videoOnly.sort((a, b) => b.height - a.height);
+        // ------------------------
+        // Find best audio
+        // ------------------------
+
+        const bestAudio = [...audio].sort((a, b) => (b.abr || 0) - (a.abr || 0))[0];
+
+        const bestAudioSize = bestAudio?.size || 0;
+
+        // ------------------------
+        // Fix videoOnly size
+        // ------------------------
+
+        const videoOnlyMerged = videoOnly.map(v => ({
+          ...v,
+          size: (v.size || 0) + bestAudioSize
+        }));
+
+        // ------------------------
+        // Sort formats
+        // ------------------------
+
         video.sort((a, b) => b.height - a.height);
+
+        videoOnlyMerged.sort((a, b) => b.height - a.height);
+
         audio.sort((a, b) => (b.abr || 0) - (a.abr || 0));
+
+        // ------------------------
+        // Return response
+        // ------------------------
 
         resolve(
           new Response(
@@ -85,13 +121,18 @@ export async function POST(req) {
                 duration: data.duration,
                 channel: data.uploader,
                 views: data.view_count,
-                uploadDate: data.upload_date,
+                uploadDate: data.upload_date
               },
-              formats: { video, videoOnly, audio },
+              formats: {
+                video,
+                videoOnly: videoOnlyMerged,
+                audio
+              }
             }),
             { status: 200 }
           )
         );
+
       }
     );
   });

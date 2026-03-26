@@ -13,7 +13,6 @@ import HowItWorks from "./components/HowItWorks";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 
-const API_BASE = "https://yt-downloader-api-x0yq.onrender.com";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -28,7 +27,7 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/api/formats`, {
+      const res = await fetch("/api/formats", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
@@ -67,7 +66,7 @@ export default function Home() {
       mergeAudio: "true",
       });
 
-      window.location.href = `${API_BASE}/api/download?${params.toString()}`;
+      window.location.href = `/api/download?${params.toString()}`;
       toast.success("Download started...");
 
     // const blob = await res.blob();

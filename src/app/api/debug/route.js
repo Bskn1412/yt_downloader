@@ -1,22 +1,33 @@
-import ytdlp from "yt-dlp-exec";
+import { execFile } from "child_process";
 
 export async function GET() {
-  try {
+  return new Promise((resolve) => {
 
-    const version = await ytdlp("--version");
+    execFile(
+      "yt-dlp",
+      ["--version"],
+      (error, stdout, stderr) => {
 
-    return Response.json({
-      success: true,
-      version
-    });
+        if (error) {
+          resolve(
+            Response.json({
+              success: false,
+              error: error.message,
+              stderr,
+            })
+          );
 
-  } catch (e) {
+          return;
+        }
 
-    console.error(e);
+        resolve(
+          Response.json({
+            success: true,
+            version: stdout.trim(),
+          })
+        );
+      }
+    );
 
-    return Response.json({
-      success: false,
-      error: e.message
-    });
-  }
+  });
 }

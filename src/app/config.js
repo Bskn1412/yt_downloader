@@ -1,2 +1,2 @@
 // frontend/src/config.js
-export const API_BASE = "https://bskn-hdytpro.hf.space/";
+export const API_BASE = "https://bskn-hdytpro.hf.space";

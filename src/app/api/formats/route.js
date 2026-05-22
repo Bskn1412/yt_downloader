@@ -1,4 +1,4 @@
-import ytdlp from "yt-dlp-exec";
+import { execFile } from "child_process";
 
 export async function POST(req) {
   try {
@@ -19,11 +19,30 @@ export async function POST(req) {
     }
 
     // ✅ HF/Linux compatible
-    const data = await ytdlp(url, {
-      dumpSingleJson: true,
-      noWarnings: true,
-      noPlaylist: true,
-      preferFreeFormats: true,
+    const data = await new Promise((resolve, reject) => {
+      execFile(
+        "yt-dlp",
+        [
+          "-J",
+          "--no-playlist",
+          "--no-warnings",
+          url,
+        ],
+        (error, stdout, stderr) => {
+          if (error) {
+            console.error(stderr);
+
+            reject(error);
+            return;
+          }
+
+          try {
+            resolve(JSON.parse(stdout));
+          } catch (e) {
+            reject(e);
+          }
+        }
+      );
     });
 
     const formats = data.formats || [];

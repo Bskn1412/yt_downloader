@@ -11,7 +11,7 @@ import { tmpdir } from "os";
 
 import pLimit from "p-limit";
 
-const limit = pLimit(3);
+const limit = pLimit(2);
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -128,6 +128,9 @@ function runYtDlp({
 
       "--js-runtimes",
       "node",
+
+      "--ffmpeg-location",
+      "/usr/bin",
 
       "-o",
       outputTemplate,

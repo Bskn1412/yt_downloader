@@ -12,10 +12,10 @@
     "@emailjs/browser": "^4.4.1",
     "emailjs-com": "^3.2.0",
     "lucide-react": "^0.577.0",
-    "next": "^9.3.3",
+    "next": "^15.5.18",
     "p-limit": "^7.3.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "resend": "^6.9.4",
     "sonner": "^2.0.7"
   },

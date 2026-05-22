@@ -160,7 +160,7 @@ const audioDisplayFormats = (() => {
           placeholder="Paste video URL..."
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && fetchFormats()}
+          onKeyDown={(e) => e.key === "Enter" && fetchFormats()}
         />
         <button onClick={fetchFormats} className="fetch-button glow-button-sm">
           <span>Fetch</span>

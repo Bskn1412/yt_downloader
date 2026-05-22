@@ -21,13 +21,19 @@ export async function POST(req) {
     // ✅ HF/Linux compatible
     const data = await new Promise((resolve, reject) => {
       execFile(
-        "yt-dlp",
-        [
-          "-J",
-          "--no-playlist",
-          "--no-warnings",
-          url,
-        ],
+      "yt-dlp",
+      [
+        "-J",
+
+        "--no-playlist",
+
+        "--no-warnings",
+
+        "--extractor-args",
+        "youtube:player_client=android,web",
+
+        url,
+      ],
         (error, stdout, stderr) => {
           if (error) {
             console.error(stderr);

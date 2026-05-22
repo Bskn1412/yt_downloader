@@ -122,6 +122,9 @@ function runYtDlp({
       "-f",
       formatSelector,
 
+      "--extractor-args",
+      "youtube:player_client=android,web",
+
       "--no-playlist",
 
       "--newline",

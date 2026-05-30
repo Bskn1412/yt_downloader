@@ -122,6 +122,10 @@ function runYtDlp({
       "-f",
       formatSelector,
 
+      "--cookies",
+        "/app/cookies.txt",
+        "--geo-bypass",
+      
       "--extractor-args",
       "youtube:player_client=android,web",
 

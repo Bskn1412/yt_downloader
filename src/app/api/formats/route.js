@@ -25,6 +25,10 @@ export async function POST(req) {
       [
         "-J",
 
+        "--cookies",
+        "/app/cookies.txt",
+        "--geo-bypass",
+
         "--no-playlist",
 
         "--no-warnings",
